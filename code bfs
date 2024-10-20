@@ -1,0 +1,37 @@
+from collections import deque
+
+cities_graph = {
+    "Islamabad": ["Rawalpindi", "Lahore", "Peshawar"],
+    "Rawalpindi": ["Islamabad", "Peshawar", "Quetta"],
+    "Peshawar": ["Islamabad", "Rawalpindi", "Quetta"],
+    "Lahore": ["Islamabad", "Multan", "Quetta"],
+    "Multan": ["Lahore", "Karachi", "Quetta"],
+    "Quetta": ["Rawalpindi", "Peshawar", "Multan", "Karachi"],
+    "Karachi": ["Multan", "Quetta"]
+}
+
+def bfs_shortest_path(graph, start, goal):
+    queue = deque([(start, [start])])
+    visited = set()
+
+    while queue:
+        current_city, path = queue.popleft()
+
+        if current_city == goal:
+            return path
+
+        if current_city not in visited:
+            visited.add(current_city)
+
+            for neighbor in graph[current_city]:
+                if neighbor not in visited:
+                    queue.append((neighbor, path + [neighbor]))
+
+    return None
+
+shortest_path = bfs_shortest_path(cities_graph, "Islamabad", "Karachi")
+
+if shortest_path:
+    print(f"The shortest path from Islamabad to Karachi is: {' → '.join(shortest_path)}")
+else:
+    print("No path found from Islamabad to Karachi.")
